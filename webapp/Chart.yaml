@@ -1,0 +1,9 @@
+apiVersion: v2
+name: hello-app
+version: 1.0.0
+appVersion: v2
+description: A simple Helm chart for deploying hello-app as a containerized application
+maintainers:
+  - name: Orsan
+    email: orsan.awawdi@gmail.com
+type: application
