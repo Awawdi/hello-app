@@ -30,6 +30,16 @@ pipeline {
 //         }
 //       }
 //     }
+     stage('Prerequisites'){
+        steps {
+            script {
+                sh """
+                sudo apt-get install python-pip
+                pip install awscli
+                """
+            }
+        }
+     }
      stage('Install helm S3 plugin only if does not exist') {
        steps {
         script {
