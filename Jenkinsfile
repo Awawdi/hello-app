@@ -35,8 +35,9 @@ pipeline {
           if (!sh(returnStatus: true, script: 'helm plugin list | grep -q "s3"').trim()) {
             echo 'Helm S3 plugin not found. Installing...'
             sh 'helm plugin install https://github.com/hypnoglow/helm-s3.git'
-         }
-       }
+            }
+          }
+        }
      }
      stage('Package Helm Chart') {
       steps {
