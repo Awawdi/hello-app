@@ -31,8 +31,10 @@ pipeline {
       steps {
         script {
           def filename = "hello-app-${BUILD_NUMBER}.tgz"
-          sh 'helm package webapp/'
-          sh 'mv *.tgz $filename'
+          sh """
+                helm package webapp/
+                mv *.tgz ${filename}
+             """
         }
       }
     }
