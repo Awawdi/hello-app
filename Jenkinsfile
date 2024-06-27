@@ -34,8 +34,8 @@ pipeline {
         steps {
             script {
                 sh """
-                apt-get install python-pip
-                pip install awscli
+                export PYTHONPATH=${WORKSPACE}
+                pip3.9 install -r ${WORKSPACE}/requirements.txt
                 """
             }
         }
