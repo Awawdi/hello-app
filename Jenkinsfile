@@ -6,7 +6,7 @@ pipeline {
     awsAccessKeyId = 'key ID of aws credentials'
     awsSecretAccessKey = 'secret access key of aws credentials'
     s3BucketName = 'hello-app-helm-charts2'
-    helm-package-filename = ''
+    helmPackageFilename = ''
   }
 
   agent any
@@ -32,10 +32,10 @@ pipeline {
      stage('Package Helm Chart') {
       steps {
         script {
-          helm-package-filename = "hello-app-${BUILD_NUMBER}.tgz"
+          helmPackageFilename = "hello-app-${BUILD_NUMBER}.tgz"
           sh """
                 helm package webapp/
-                mv *.tgz ${helm-package-filename}
+                mv *.tgz ${helmPackageFilename}
              """
         }
       }
@@ -46,7 +46,7 @@ pipeline {
               // Install AWS CLI plugin
               sh """
               helm plugin install https://github.com/hypnoglow/helm-s3.git
-              aws s3 push ./${helm-package-filename} s3://${s3BucketName}/charts/
+              aws s3 push ./${helmPackageFilename} s3://${s3BucketName}/charts/
               """
             }
       }
