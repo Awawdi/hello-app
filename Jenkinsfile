@@ -32,7 +32,7 @@ pipeline {
         script {
           def filename = "hello-app-${BUILD_NUMBER}.tgz"
           sh 'helm package webapp/'
-          mv *.tgz filename
+          sh 'mv *.tgz $filename'
         }
       }
     }
