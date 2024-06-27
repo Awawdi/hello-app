@@ -6,6 +6,7 @@ pipeline {
     awsAccessKeyId = 'key ID of aws credentials'
     awsSecretAccessKey = 'secret access key of aws credentials'
     s3BucketName = 'hello-app-helm-charts2'
+    helmRepoName = 'hello-app-repo'
     helmPackageFilename = ''
   }
 
@@ -48,7 +49,6 @@ pipeline {
         script {
           helmPackageFilename = "hello-app-${BUILD_NUMBER}.tgz"
           sh """
-                helm init --client-only
                 helm package webapp/
                 mv *.tgz ${helmPackageFilename}
              """
@@ -59,7 +59,9 @@ pipeline {
       steps {
           script {
               sh """
-              helm s3 push ./${helmPackageFilename} s3://${s3BucketName}/charts/
+              helm s3 init --ignore-if-exists s3://${s3BucketName}/charts
+              helm repo add ${helmRepoName} s3://${s3BucketName}/charts
+              helm s3 push ./${helmPackageFilename} ${helmRepoName}
               """
             }
       }
