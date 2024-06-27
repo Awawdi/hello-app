@@ -32,14 +32,14 @@ pipeline {
      stage('Install helm S3 plugin only if does not exist') {
        steps {
         script {
-          sh """
+          sh '''
             export helm_s3_installed=$(helm plugin list | grep s3)
                 if [ -z "${helm_s3_installed}" ]; then
                 helm plugin install https://github.com/hypnoglow/helm-s3.git
                 else
                 echo "plugin helm-s3 is already installed"
                 fi
-            """
+            '''
           }
         }
      }
