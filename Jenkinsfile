@@ -35,7 +35,7 @@ pipeline {
             script {
                 sh """
                 export PYTHONPATH=${WORKSPACE}
-                pip3.9 install -r ${WORKSPACE}/requirements.txt
+                pip3 install -r ${WORKSPACE}/requirements.txt
                 """
             }
         }
