@@ -1,10 +1,29 @@
 pipeline {
-  agent any  // This allows Jenkins to run the job on any available agent/node
+  environment {
+    imagename = "orsanaw/hello-app-development"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+    awsAccessKeyId = 'key ID of aws credentials'
+    awsSecretAccessKey = 'secret access key of aws credentials'
+    s3BucketName = 'hello-app-helm-charts2'
+  }
+  agent any
   stages {
-    stage('Echo Hello World') {
+    stage('Building image') {
       steps {
         script {
-          echo 'Hello World!'
+          echo 'Building image'
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps {
+        script {
+          echo 'Pushing image'
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+          }
         }
       }
     }
