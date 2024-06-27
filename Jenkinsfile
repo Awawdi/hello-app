@@ -34,7 +34,7 @@ pipeline {
         steps {
             script {
                 sh """
-                sudo apt-get install python-pip
+                apt-get install python-pip
                 pip install awscli
                 """
             }
