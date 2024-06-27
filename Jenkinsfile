@@ -29,6 +29,15 @@ pipeline {
 //         }
 //       }
 //     }
+     stage('Install helm S3 plugin only if does not exist') {
+       steps {
+        script {
+          if (!sh(returnStatus: true, script: 'helm plugin list | grep -q "s3"').trim()) {
+            echo 'Helm S3 plugin not found. Installing...'
+            sh 'helm plugin install https://github.com/hypnoglow/helm-s3.git'
+         }
+       }
+     }
      stage('Package Helm Chart') {
       steps {
         script {
@@ -43,10 +52,9 @@ pipeline {
     stage('Push helm chart to S3 bucket') {
       steps {
           script {
-              // Install AWS CLI plugin
+              // Install AWS CLI plugin and push chart to s3 bucket
               sh """
-              helm plugin install https://github.com/hypnoglow/helm-s3.git
-              aws s3 push ./${helmPackageFilename} s3://${s3BucketName}/charts/
+              helm s3 push ./${helmPackageFilename} s3://${s3BucketName}/charts/
               """
             }
       }
