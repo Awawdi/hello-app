@@ -30,10 +30,8 @@ pipeline {
      stage('Package Helm Chart') {
       steps {
         script {
-          def timestamp = sh(script: 'date +%Y-%m-%d_%H-%M-%S', returnStdout: true).trim()
-          echo $timestamp
-          def filename = "hello-app-${timestamp}.tgz"
-          echo $filename
+          def filenameBase = "hello-app-${BUILD_NUMBER}"
+          def filename = "${filenameBase}.tgz"
           sh 'helm package webapp/ -o $filename'
         }
       }
