@@ -48,6 +48,7 @@ pipeline {
         script {
           helmPackageFilename = "hello-app-${BUILD_NUMBER}.tgz"
           sh """
+                helm init --client-only
                 helm package webapp/
                 mv *.tgz ${helmPackageFilename}
              """
@@ -57,7 +58,6 @@ pipeline {
     stage('Push helm chart to S3 bucket') {
       steps {
           script {
-              // Install AWS CLI plugin and push chart to s3 bucket
               sh """
               helm s3 push ./${helmPackageFilename} s3://${s3BucketName}/charts/
               """
