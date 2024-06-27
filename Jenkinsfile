@@ -27,5 +27,16 @@ pipeline {
         }
       }
     }
+     stage('Package Helm Chart') {
+      steps {
+        script {
+          def timestamp = sh(script: 'date +%Y-%m-%d_%H-%M-%S', returnStdout: true).trim()
+          echo $timestamp
+          def filename = "hello-app-${timestamp}.tgz"
+          echo $filename
+          sh 'helm package webapp/ -o $filename'
+        }
+      }
+    }
   }
 }
