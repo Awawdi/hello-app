@@ -9,30 +9,30 @@ pipeline {
   }
   agent any
   stages {
-    stage('Building image') {
-      steps {
-        script {
-          echo 'Building image'
-          dockerImage = docker.build imagename
-        }
-      }
-    }
-    stage('Deploy Image') {
-      steps {
-        script {
-          echo 'Pushing image'
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
-          }
-        }
-      }
-    }
+//     stage('Building image') {
+//       steps {
+//         script {
+//           echo 'Building image'
+//           dockerImage = docker.build imagename
+//         }
+//       }
+//     }
+//     stage('Deploy Image') {
+//       steps {
+//         script {
+//           echo 'Pushing image'
+//           docker.withRegistry( '', registryCredential ) {
+//             dockerImage.push("$BUILD_NUMBER")
+//           }
+//         }
+//       }
+//     }
      stage('Package Helm Chart') {
       steps {
         script {
-          def filenameBase = "hello-app-${BUILD_NUMBER}"
-          def filename = "${filenameBase}.tgz"
-          sh 'helm package webapp/ -o $filename'
+          def filename = "hello-app-${BUILD_NUMBER}.tgz"
+          sh 'helm package webapp/'
+          mv *.tgz filename
         }
       }
     }
