@@ -12,34 +12,24 @@ pipeline {
 
   agent any
   stages {
-//     stage('Building image') {
-//       steps {
-//         script {
-//           echo 'Building image'
-//           dockerImage = docker.build imagename
-//         }
-//       }
-//     }
-//     stage('Deploy Image') {
-//       steps {
-//         script {
-//           echo 'Pushing image'
-//           docker.withRegistry( '', registryCredential ) {
-//             dockerImage.push("$BUILD_NUMBER")
-//           }
-//         }
-//       }
-//     }
-     stage('Prerequisites'){
-        steps {
-            script {
-                sh """
-                export PYTHONPATH=${WORKSPACE}
-                pip3 install -r ${WORKSPACE}/requirements.txt
-                """
-            }
+    stage('Building image') {
+      steps {
+        script {
+          echo 'Building image'
+          dockerImage = docker.build imagename
         }
-     }
+      }
+    }
+    stage('Deploy Image') {
+      steps {
+        script {
+          echo 'Pushing image'
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+          }
+        }
+      }
+    }
      stage('Install helm S3 plugin only if does not exist') {
        steps {
         script {
