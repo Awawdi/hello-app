@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    imagename = "orsanaw/hello-app-development"
+    imagename = "orsanaw/hello-app-development:${BUILD_NUMBER}"
     registryCredential = 'dockerhub'
     dockerImage = ''
     s3BucketName = 'hello-app-helm-charts2'
@@ -24,7 +24,7 @@ pipeline {
         script {
           echo 'Pushing image'
           docker.withRegistry( '', registryCredential ) {
-            docker.push("${imageName}:${BUILD_NUMBER}")
+            docker.push("${imageName}")
           }
         }
       }
