@@ -62,8 +62,9 @@ pipeline {
               helm repo add ${helmRepoName} s3://${s3BucketName}/charts
               helm s3 push ./${helmPackageFilename} ${helmRepoName}
               """
-            }
+          }
+        }
       }
     }
-  }
+}
 }
