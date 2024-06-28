@@ -32,6 +32,7 @@ pipeline {
        steps {
         script {
           sh '''
+            helm version --short
             export helm_s3_installed=$(helm plugin list | grep s3)
                 if [ -z "${helm_s3_installed}" ]; then
                 helm plugin install https://github.com/hypnoglow/helm-s3.git
@@ -42,27 +43,27 @@ pipeline {
           }
         }
      }
-     stage('Package Helm Chart') {
-      steps {
-        script {
-          helmPackageFilename = "hello-app-${BUILD_NUMBER}.tgz"
-          sh """
-                helm package webapp/
-                mv *.tgz ${helmPackageFilename}
-             """
-        }
-      }
-    }
-    stage('Push helm chart to S3 bucket') {
+    stage('Initialize an S3 bucket as a Helm repository') {
       steps {
           withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
             script {
               sh """
-              helm s3 init --ignore-if-exists s3://${s3BucketName}/charts
-              helm repo add ${helmRepoName} s3://${s3BucketName}/charts
-              helm s3 push ./${helmPackageFilename} ${helmRepoName}
+              helm s3 init --ignore-if-exists s3://${s3BucketName}/stable/myapp
+              aws s3 ls s3://${s3BucketName}/stable/myapp/
+              helm repo add ${helmRepoName} s3://${s3BucketName}/stable/myapp/
               """
           }
+        }
+      }
+    }
+    stage('Package Helm Chart') {
+      steps {
+        script {
+          sh """
+                helm package ./webapp --version 1.1.${BUILD_NUMBER}
+                helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
+                helm search repo ${helmRepoName}
+             """
         }
       }
     }
