@@ -14,21 +14,14 @@ pipeline {
       steps {
         script {
           echo 'Building image'
-          imagename = docker.build(imagename)
-          echo "Built image: ${imageName}"
-        }
-      }
-    }
-    stage('Deploy Image') {
-      steps {
-        script {
-          echo 'Pushing image'
-          docker.withRegistry( '', registryCredential ) {
-            docker.push("${imageName}")
+          docker.withRegistry('', registryCredential) {
+          def imageName = docker.build(imagename) // Capture the image name
+          docker.push("${imageName}")
           }
-        }
-      }
-    }
+          }
+          }
+          }
+
 //      stage('Install helm S3 plugin only if does not exist') {
 //        steps {
 //         script {
