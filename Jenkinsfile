@@ -3,8 +3,6 @@ pipeline {
     imagename = "orsanaw/hello-app-development"
     registryCredential = 'dockerhub'
     dockerImage = ''
-    awsAccessKeyId = 'key ID of aws credentials'
-    awsSecretAccessKey = 'secret access key of aws credentials'
     s3BucketName = 'hello-app-helm-charts2'
     helmRepoName = 'hello-app-repo'
     helmPackageFilename = ''
@@ -57,7 +55,8 @@ pipeline {
     }
     stage('Push helm chart to S3 bucket') {
       steps {
-          script {
+          withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
+            script {
               sh """
               helm s3 init --ignore-if-exists s3://${s3BucketName}/charts
               helm repo add ${helmRepoName} s3://${s3BucketName}/charts
