@@ -15,8 +15,8 @@ pipeline {
         script {
           echo 'Building image'
           docker.withRegistry('', registryCredential) {
-          def imageName = docker.build(imagename) // Capture the image name
-          docker.push("${imageName}")
+              def imageName = docker.build(imagename) // Capture the image name
+              imageName.push()
           }
           }
           }
