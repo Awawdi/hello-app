@@ -58,14 +58,16 @@ pipeline {
     }
     stage('Package Helm Chart') {
       steps {
-        script {
-          sh """
-                helm package ./webapp --version 1.1.${BUILD_NUMBER}
-                helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
-                helm search repo ${helmRepoName}
-             """
+        withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
+          script {
+              sh """
+                    helm package ./webapp --version 1.1.${BUILD_NUMBER}
+                    helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
+                    helm search repo ${helmRepoName}
+                 """
+          }
         }
-      }
+       }
     }
 }
 }
