@@ -50,7 +50,7 @@ pipeline {
               sh """
               helm s3 init --ignore-if-exists s3://${s3BucketName}/stable/myapp
               aws s3 ls s3://${s3BucketName}/stable/myapp/
-              helm repo add ${helmRepoName} s3://${s3BucketName}/stable/myapp/
+              helm repo add ${helmRepoName} s3://${s3BucketName}/stable/myapp/ --force-update
               """
           }
         }
