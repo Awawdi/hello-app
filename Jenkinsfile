@@ -14,7 +14,7 @@ pipeline {
       steps {
         script {
           echo 'Building image'
-          dockerImage = docker.build(imagename)
+          imagename = docker.build(imagename)
           echo "Built image: ${imageName}"
         }
       }
@@ -24,7 +24,7 @@ pipeline {
         script {
           echo 'Pushing image'
           docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
+            docker.push("${imageName}:${BUILD_NUMBER}")
           }
         }
       }
