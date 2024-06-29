@@ -69,11 +69,11 @@ pipeline {
     //     }
     stage('Deploy Image to k8s'){
             steps {
-            withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
+                withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
                      script {
                        sh '''
-                        helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
-                        helm list | grep ${HELM_APP_NAME}
+                        ./helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
+                        ./helm list | grep ${HELM_APP_NAME}
                         '''
                     }
         }}
