@@ -46,12 +46,15 @@ pipeline {
               withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
                 script {
                   sh """
+                  export KUBECONFIG=~/.kube/config
+
                   helm s3 init --ignore-if-exists s3://${s3BucketName}/stable/myapp
                   aws s3 ls s3://${s3BucketName}/stable/myapp/
                   helm repo add ${helmRepoName} s3://${s3BucketName}/stable/myapp/ --force-update
                   helm package ./webapp --version 1.1.${BUILD_NUMBER}
                   helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
                   helm search repo ${helmRepoName}
+                  helm list | grep ${HELM_APP_NAME}
                   helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
                      """
               }
