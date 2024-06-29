@@ -71,7 +71,7 @@ pipeline {
             steps {
                      script {
                        sh '''
-                        export KUBECONFIG=/home/ubuntu/.kube
+                        export KUBECONFIG=/home/ubuntu/.kube/config
                         helm list
                         helm lint ./${HELM_CHART_DIRECTORY}
                         helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
