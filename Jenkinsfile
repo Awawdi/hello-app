@@ -54,7 +54,7 @@ pipeline {
                   helm package ./webapp --version 1.1.${BUILD_NUMBER}
                   helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
                   helm search repo ${helmRepoName}
-                  helm list | grep ${HELM_APP_NAME}
+                  helm list | grep ${HELM_APP_NAME} --kubeconfig=~/.kube/config
                   helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
                      """
               }
