@@ -7,6 +7,7 @@ pipeline {
     registryCredential = 'dockerhub'
     s3BucketName = 'hello-app-helm-charts2'
     helmRepoName = 'hello-app-repo'
+    KUBECONFIG_PATH = '/var/lib/jenkins/.config/config'
   }
 
   agent any
@@ -46,15 +47,13 @@ pipeline {
               withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
                 script {
                   sh """
-                  export KUBECONFIG=~/.kube/config
-
                   helm s3 init --ignore-if-exists s3://${s3BucketName}/stable/myapp
                   aws s3 ls s3://${s3BucketName}/stable/myapp/
                   helm repo add ${helmRepoName} s3://${s3BucketName}/stable/myapp/ --force-update
                   helm package ./webapp --version 1.1.${BUILD_NUMBER}
                   helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
                   helm search repo ${helmRepoName}
-                  helm list --kubeconfig /home/ubuntu/.kube/config | grep ${HELM_APP_NAME}
+                  helm list --kube-config $KUBECONFIG_PATH | grep ${HELM_APP_NAME}
                   helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
                      """
               }
