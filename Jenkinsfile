@@ -69,12 +69,15 @@ pipeline {
     //     }
     stage('Deploy Image to k8s'){
             steps {
+            withCredentials([file(credentialsId: 'k8s', variable: 'config')]) {
                      script {
+
                        sh '''
+                       export KUBECONFIG=\${config}
                         helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
                         helm list | grep ${HELM_APP_NAME}
                         '''
-                    }
+                    }}
         }}
   }
 }
