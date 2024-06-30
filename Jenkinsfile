@@ -37,7 +37,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins-ci', containers: [
   ]
   )
 
-pipeline {
+node('mypod') {
   environment {
     HELM_APP_NAME = "hello-app"
     HELM_CHART_DIRECTORY = "webapp"
@@ -49,11 +49,9 @@ pipeline {
     KUBECONFIG_PATH = '/var/lib/jenkins/.config/config'
   }
 
-  agent any
   options {
         timeout(time: 1, unit: 'HOURS')
           }
-  stages {
 //     stage('Building image') {
 //       steps {
 //         script {
@@ -67,7 +65,6 @@ pipeline {
 //     }
 
          stage('Install helm S3 plugin only if does not exist') {
-           steps {
             script {
               sh '''
                 helm version --short
@@ -80,9 +77,8 @@ pipeline {
                 '''
               }
             }
-         }
+
         stage('Initialize an S3 bucket as a Helm repository') {
-          steps {
              container('helm'){
                 script {
                   sh """
@@ -98,6 +94,4 @@ pipeline {
               }
             }
            }
-        }
-  }
-}
+           }
