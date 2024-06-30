@@ -54,17 +54,17 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
           }
   stages {
-    stage('Building image') {
-      steps {
-        script {
-          echo 'Building image'
-          docker.withRegistry('', registryCredential) {
-            def ImageNameToPush = docker.build(IMAGENAME) // Capture the image name
-            ImageNameToPush.push()
-          }
-        }
-      }
-    }
+//     stage('Building image') {
+//       steps {
+//         script {
+//           echo 'Building image'
+//           docker.withRegistry('', registryCredential) {
+//             def ImageNameToPush = docker.build(IMAGENAME) // Capture the image name
+//             ImageNameToPush.push()
+//           }
+//         }
+//       }
+//     }
 
          stage('Install helm S3 plugin only if does not exist') {
            steps {
