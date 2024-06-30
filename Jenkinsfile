@@ -35,9 +35,8 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins-ci', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
     hostPathVolume(mountPath: '/usr/local/bin/helm', hostPath: '/usr/local/bin/helm')
   ]
-  )
-
-node('mypod') {
+  ) {
+    node('mypod') {
   environment {
     HELM_APP_NAME = "hello-app"
     HELM_CHART_DIRECTORY = "webapp"
