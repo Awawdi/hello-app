@@ -53,7 +53,7 @@ pipeline {
                   helm package ./webapp --version 1.1.${BUILD_NUMBER}
                   helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
                   helm search repo ${helmRepoName}
-                  sudo su helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
+                  helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
                      """
               }
             }
