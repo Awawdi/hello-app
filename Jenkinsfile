@@ -94,3 +94,4 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins-ci', containers: [
             }
            }
            }
+}
