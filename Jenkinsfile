@@ -66,7 +66,7 @@ pipeline {
                     writeFile file: '/tmp/kubeconfig', text: KUBECONFIG_CONTENT
                     sh 'chmod 600 /tmp/kubeconfig'
                     // Run Helm upgrade command
-                    sh 'KUBECONFIG=/tmp/kubeconfig helm upgrade hello-app hello-app-repo/hello-app --set appName=hello-app --set image.name=orsanaw/hello-app-development:86 --set image.tag=86 --install --force --wait'
+                    sh 'KUBECONFIG=/tmp/kubeconfig helm upgrade hello-app hello-app-repo/hello-app --set appName=hello-app --set image.name=orsanaw/hello-app-development:88 --set image.tag=86 --install --force --wait'
                 }
             }
         }
