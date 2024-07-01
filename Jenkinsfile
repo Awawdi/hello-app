@@ -22,16 +22,10 @@ pipeline {
         script {
           echo 'Building image'
           docker.withRegistry('', registryCredential) {
-            def ImageNameToPush = docker.build(IMAGENAME) // Capture the image name
-            ImageNameToPush.push()
+            def ImageName = docker.build(IMAGENAME) // Capture the image name
+            ImageName.push()
+            dockerImage.remove()
           }
-        }
-      }
-    }
-    stage('Cleanup Docker Image') {
-      steps {
-        script {
-          docker.image(IMAGENAME).remove()
         }
       }
     }
