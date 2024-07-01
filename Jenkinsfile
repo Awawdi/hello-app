@@ -9,7 +9,7 @@ pipeline {
     registryCredential = 'dockerhub'
     s3BucketName = 'hello-app-helm-charts2'
     helmRepoName = 'hello-app-repo'
-    KUBECONFIG = credentials('kubeconfig-credentials-id')
+    KUBECONFIG_CONTENT = credentials('kubeconfig-credentials-id')
 
   }
 
