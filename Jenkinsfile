@@ -34,6 +34,7 @@ pipeline {
           docker.image(IMAGENAME).remove()
         }
       }
+    }
       stage('Install helm S3 plugin only if does not exist') {
         steps {
           script {
@@ -79,8 +80,4 @@ pipeline {
                         --force \\
                         --wait
             """
-          }
-        }
-      }
-    }
-  }
+            }}}}}
