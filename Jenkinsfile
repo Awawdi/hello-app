@@ -7,7 +7,7 @@ pipeline {
 
     IMAGENAME = "orsanaw/hello-app-development:${BUILD_NUMBER}"
     registryCredential = 'dockerhub'
-    s3BucketName = 'hello-app-helm-charts2'
+    S3BUCKETNAME = 'hello-app-helm-charts2'
     helmRepoName = 'hello-app-repo'
     KUBECONFIG_CONTENT = credentials('kubeconfig-credentials-id')
 
@@ -50,9 +50,9 @@ pipeline {
                 withAWS(region: 'us-east-1', credentials: 'aws-credentials') {
                     script {
                         sh """
-                        helm s3 init --ignore-if-exists s3://${s3BucketName}/stable/myapp
-                        aws s3 ls s3://${s3BucketName}/stable/myapp/
-                        helm repo add ${helmRepoName} s3://${s3BucketName}/stable/myapp/ --force-update
+                        helm s3 init --ignore-if-exists s3://${S3BUCKETNAME}/stable/myapp
+                        aws s3 ls s3://${S3BUCKETNAME}/stable/myapp/
+                        helm repo add ${helmRepoName} s3://${S3BUCKETNAME}/stable/myapp/ --force-update
                         helm package ./webapp --version 1.1.${BUILD_NUMBER}
                         helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
                         helm search repo ${helmRepoName}
@@ -61,21 +61,23 @@ pipeline {
                 }
             }
         }
-      stage('Deploy using Helm') {
-        steps {
-          script {
-            // Write kubeconfig content to a temporary file
-            writeFile file: '/tmp/kubeconfig', text: KUBECONFIG_CONTENT
-            // Set secure permissions for kubeconfig file
-            sh 'chmod 600 /tmp/kubeconfig'
-
-            sh """
-            helm upgrade ${HELM_APP_NAME} ${helmRepoName}/${HELM_APP_NAME} \\
-                        --set appName=${HELM_APP_NAME} \\
-                        --set image.name=${IMAGENAME} \\
-                        --set image.tag=${BUILD_NUMBER} \\
-                        --install \\
-                        --force \\
-                        --wait
-            """
-            }}}}}
+//       stage('Deploy using Helm') {
+//         steps {
+//           script {
+//             // Write kubeconfig content to a temporary file
+//             writeFile file: '/tmp/kubeconfig', text: KUBECONFIG_CONTENT
+//             // Set secure permissions for kubeconfig file
+//             sh 'chmod 600 /tmp/kubeconfig'
+//
+//             sh """
+//             helm upgrade ${HELM_APP_NAME} ${helmRepoName}/${HELM_APP_NAME} \\
+//                         --set appName=${HELM_APP_NAME} \\
+//                         --set image.name=${IMAGENAME} \\
+//                         --set image.tag=${BUILD_NUMBER} \\
+//                         --install \\
+//                         --force \\
+//                         --wait
+//             """
+//             }}}
+  }
+}
