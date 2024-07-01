@@ -63,7 +63,9 @@ pipeline {
   stage('Deploy using Helm') {
             steps {
                 script {
-                    writeFile file: '/tmp/kubeconfig', text: env.KUBECONFIG
+                    writeFile file: '/tmp/kubeconfig', text: KUBECONFIG_CONTENT
+                    sh 'chmod 600 /tmp/kubeconfig'
+                    // Run Helm upgrade command
                     sh 'KUBECONFIG=/tmp/kubeconfig helm upgrade hello-app hello-app-repo/hello-app --set appName=hello-app --set image.name=orsanaw/hello-app-development:86 --set image.tag=86 --install --force --wait'
                 }
             }
