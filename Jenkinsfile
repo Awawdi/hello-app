@@ -24,9 +24,13 @@ pipeline {
           docker.withRegistry('', registryCredential) {
             def ImageName = docker.build(IMAGENAME) // Capture the image name
             ImageName.push()
-            dockerImage.remove()
           }
         }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi ${IMAGENAME}"
       }
     }
       stage('Install helm S3 plugin only if does not exist') {
