@@ -1,5 +1,7 @@
 pipeline {
+  agent any
   environment {
+    PATH = "/usr/sbin:$PATH"  // Ensure Helm binary path is included
     HELM_APP_NAME = "hello-app"
     HELM_CHART_DIRECTORY = "webapp"
 
@@ -9,7 +11,6 @@ pipeline {
     helmRepoName = 'hello-app-repo'
   }
 
-  agent any
   options {
         timeout(time: 1, unit: 'HOURS')
           }
@@ -57,6 +58,28 @@ pipeline {
               }
             }
            }
+        }
+  stage('Deploy using Helm') {
+            steps {
+                script {
+                    // Ensure helm CLI is available
+                    sh 'helm version --short'
+
+                    // Update Helm repo to get latest charts
+                    sh "helm repo update"
+
+                    // Perform Helm upgrade
+                    sh """
+                    helm upgrade ${HELM_APP_NAME} ${helmRepoName}/${HELM_APP_NAME} \\
+                        --set appName=${HELM_APP_NAME} \\
+                        --set image.name=${IMAGENAME} \\
+                        --set image.tag=${BUILD_NUMBER} \\
+                        --install \\
+                        --force \\
+                        --wait
+                    """
+                }
+            }
         }
   }
 }
