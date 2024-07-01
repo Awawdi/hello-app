@@ -71,9 +71,6 @@ pipeline {
                     export KUBECONFIG=${KUBECONFIG}
                     """
 
-                    // Update Helm repo to get latest charts
-                    sh "helm repo update"
-
                     // Perform Helm upgrade
                     sh """
                     helm upgrade ${HELM_APP_NAME} ${helmRepoName}/${HELM_APP_NAME} \\
