@@ -8,7 +8,7 @@ pipeline {
     IMAGENAME = "orsanaw/hello-app-development:${BUILD_NUMBER}"
     registryCredential = 'dockerhub'
     S3BUCKETNAME = 'hello-app-helm-charts2'
-    helmRepoName = 'hello-app-repo'
+    HELM_REPO_NAME = 'hello-app-repo'
     KUBECONFIG_CONTENT = credentials('kubeconfig-credentials-id')
 
   }
@@ -52,10 +52,10 @@ pipeline {
                         sh """
                         helm s3 init --ignore-if-exists s3://${S3BUCKETNAME}/stable/myapp
                         aws s3 ls s3://${S3BUCKETNAME}/stable/myapp/
-                        helm repo add ${helmRepoName} s3://${S3BUCKETNAME}/stable/myapp/ --force-update
+                        helm repo add ${HELM_REPO_NAME} s3://${S3BUCKETNAME}/stable/myapp/ --force-update
                         helm package ./webapp --version 1.1.${BUILD_NUMBER}
-                        helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
-                        helm search repo ${helmRepoName}
+                        helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${HELM_REPO_NAME}
+                        helm search repo ${HELM_REPO_NAME}
                         """
                     }
                 }
@@ -70,7 +70,7 @@ pipeline {
 //             sh 'chmod 600 /tmp/kubeconfig'
 //
 //             sh """
-//             helm upgrade ${HELM_APP_NAME} ${helmRepoName}/${HELM_APP_NAME} \\
+//             helm upgrade ${HELM_APP_NAME} ${HELM_REPO_NAME}/${HELM_APP_NAME} \\
 //                         --set appName=${HELM_APP_NAME} \\
 //                         --set image.name=${IMAGENAME} \\
 //                         --set image.tag=${BUILD_NUMBER} \\
