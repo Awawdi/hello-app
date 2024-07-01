@@ -9,7 +9,7 @@ pipeline {
     registryCredential = 'dockerhub'
     s3BucketName = 'hello-app-helm-charts2'
     helmRepoName = 'hello-app-repo'
-    KUBECONFIG = "/home/ubuntu/.kube/config"
+    KUBECONFIG = credentials('kubeconfig-credentials-id')
 
   }
 
@@ -63,24 +63,17 @@ pipeline {
   stage('Deploy using Helm') {
             steps {
                 script {
-                    // Ensure helm CLI is available
-                    sh 'helm version --short'
-
-                    // Set kubeconfig for Helm
-                    sh """
-                    export KUBECONFIG=${KUBECONFIG}
-                    """
-
-                    // Perform Helm upgrade
-                    sh """
-                    helm upgrade ${HELM_APP_NAME} ${helmRepoName}/${HELM_APP_NAME} \\
-                        --set appName=${HELM_APP_NAME} \\
-                        --set image.name=${IMAGENAME} \\
-                        --set image.tag=${BUILD_NUMBER} \\
-                        --install \\
-                        --force \\
-                        --wait
-                    """
+                    // Install Helm if not already installed
+                    sh '''
+                    if ! command -v helm &> /dev/null
+                    then
+                        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+                    fi
+                    '''
+                    // Save kubeconfig content to a temporary file
+                    writeFile file: '/tmp/kubeconfig', text: env.KUBECONFIG
+                    // Run Helm upgrade command
+                    sh 'KUBECONFIG=/tmp/kubeconfig helm upgrade hello-app hello-app-repo/hello-app --set appName=hello-app --set image.name=orsanaw/hello-app-development:86 --set image.tag=86 --install --force --wait'
                 }
             }
         }
