@@ -9,6 +9,8 @@ pipeline {
     registryCredential = 'dockerhub'
     s3BucketName = 'hello-app-helm-charts2'
     helmRepoName = 'hello-app-repo'
+    KUBECONFIG = "/home/ubuntu/.kube/config"
+
   }
 
   options {
@@ -53,7 +55,6 @@ pipeline {
                   helm package ./webapp --version 1.1.${BUILD_NUMBER}
                   helm s3 push ./hello-app-1.1.${BUILD_NUMBER}.tgz ${helmRepoName}
                   helm search repo ${helmRepoName}
-                  helm upgrade --wait --timeout=1m --set image.tag=${BUILD_NUMBER} ${HELM_APP_NAME} ./${HELM_CHART_DIRECTORY}
                      """
               }
             }
@@ -64,6 +65,11 @@ pipeline {
                 script {
                     // Ensure helm CLI is available
                     sh 'helm version --short'
+
+                    // Set kubeconfig for Helm
+                    sh """
+                    export KUBECONFIG=${KUBECONFIG}
+                    """
 
                     // Update Helm repo to get latest charts
                     sh "helm repo update"
