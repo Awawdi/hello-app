@@ -63,16 +63,7 @@ pipeline {
   stage('Deploy using Helm') {
             steps {
                 script {
-                    // Install Helm if not already installed
-                    sh '''
-                    if ! command -v helm &> /dev/null
-                    then
-                        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-                    fi
-                    '''
-                    // Save kubeconfig content to a temporary file
                     writeFile file: '/tmp/kubeconfig', text: env.KUBECONFIG
-                    // Run Helm upgrade command
                     sh 'KUBECONFIG=/tmp/kubeconfig helm upgrade hello-app hello-app-repo/hello-app --set appName=hello-app --set image.name=orsanaw/hello-app-development:86 --set image.tag=86 --install --force --wait'
                 }
             }
