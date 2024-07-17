@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hello-world-app
+spec:
+  selector:
+    matchLabels:
+      app: hello-world
+  serviceName: "hello-world-service"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: hello-world-container
+        image: orsanaw/hello-world-app-with-logs:latest
+        volumeMounts:
+        - name: log-storage
+          mountPath: /logs
+  volumeClaimTemplates:
+  - metadata:
+      name: log-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Mi

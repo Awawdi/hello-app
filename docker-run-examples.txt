@@ -1,0 +1,54 @@
+simple logs between containers
+option1:
+
+docker run --name=nginx -d -v ~/nginxlogs:/var/log/nginx -p 5000:80 nginx
+
+--name=nginx names the container so we can refer to it more easily.
+-d detaches the process and runs it in the background. Otherwise, we would just be watching an empty Nginx prompt and wouldn’t be able to use this terminal until we killed Nginx.
+-v ~/nginxlogs:/var/log/nginx sets up a bindmount volume that links the /var/log/nginx directory from inside the Nginx container to the ~/nginxlogs directory on the host machine. Docker uses a : to split the host’s path from the container path, and the host path always comes first.
+-p 5000:80 sets up a port forward. The Nginx container is listening on port 80 by default. This flag maps the container’s port 80 to port 5000 on the host system.
+nginx specifies that the container should be built from the Nginx image
+
+cat ~/nginxlogs/access.logs
+
+
+
+option2:
+independent volume
+docker volume create --name Step1DataVolume
+docker run -ti --rm -v Step1DataVolume:/Step1DataVolume ubuntu
+echo "Step One Sample Text" > /Step1DataVolume/StepOne.txt
+exit
+
+docker run -ti --rm -v Step1DataVolume:/Step1DataVolume ubuntu
+cat /Step1DataVolume/StepOne.txt
+
+
+docker run -ti --name=Step2Container1 -v Step2DataVolume:/Step2DataVolume ubuntu
+echo "Step Two Sample Text" > /Step2DataVolume/StepTwo.txt
+cat /Step2DataVolume/StepTwo.txt
+exit
+docker start -ai Step2Container1
+cat /Step2DataVolume/StepTwo.txt
+exit
+rm container
+rm volume
+
+
+Creating a Docker Volume from an Existing Directory with Data
+docker run -ti --rm -v Step3DataVolume:/var ubuntu
+exit
+docker run --rm -v Step3DataVolume:/Step3DataVolume ubuntu ls Step3DataVolume
+
+Sharing Data
+docker run -ti --name=Step4Container1 -v Step4DataVolume:/Step4DataVolume ubuntu
+echo "Step Four Sample Text" > /Step4DataVolume/StepFour.txt
+exit
+
+docker run -ti --name=Step4Container2 --volumes-from Step4Container1 ubuntu
+cat /Step4DataVolume/StepFour.txt
+echo "We are appending text while inside Step4Container2" >> /Step4DataVolume/StepFour.txt
+docker start -ai Step4Container1
+cat /Step4DataVolume/StepFour.txt
+
+
