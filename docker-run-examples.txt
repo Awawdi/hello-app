@@ -52,3 +52,7 @@ docker start -ai Step4Container1
 cat /Step4DataVolume/StepFour.txt
 
 
+helm install hello-app-using-helm ./webapp/ --namespace k8cluster --create-namespace
+kubectl get all --namespace k8cluster
+minikube service list -p k8cluster
+kubectl exec -it hello-app-7879cf78-kb82d --namespace k8cluster -- /bin/bash
