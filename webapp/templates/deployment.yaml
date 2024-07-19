@@ -23,7 +23,7 @@ spec:
         volumeMounts:
         - name: log-volume
           mountPath: /app/logs
-        volumes:
-        - name: log-volume
-          persistentVolumeClaim:
-            claimName: hello-app-pvc
+      volumes:
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: hello-app-pvc
