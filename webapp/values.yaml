@@ -5,4 +5,4 @@ port: 5050
 namespace: k8cluster
 image:
   name: orsanaw/hello-app
-  tag: latest
+  tag: v7.0
