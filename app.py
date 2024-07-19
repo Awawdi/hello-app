@@ -1,9 +1,12 @@
+import os
+
 from flask import Flask
 import logging
 
 app = Flask(__name__)
-
-logging.basicConfig(filename='/logs/hello_world.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
+os.makedirs(log_dir, exist_ok=True)
+logging.basicConfig(filename=os.path.join(log_dir, 'hello_world.log'), level=logging.INFO, format='%(asctime)s - %(message)s')
 
 
 @app.route("/")
