@@ -15,8 +15,15 @@ spec:
       labels:
         app: {{ .Values.appName }}
     spec:
+      volumes:
+        - name: log-volume
+          persistentVolumeClaim:
+            claimName: hello-app-pvc
       containers:
       - name: {{ .Values.appName }}
         image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 5050
+        volumeMounts:
+          - mountPath: "/app/logs"
+            name: log-volume
