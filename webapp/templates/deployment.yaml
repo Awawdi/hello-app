@@ -6,7 +6,7 @@ metadata:
   labels:
     app: {{ .Values.appName }}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: {{ .Values.appName }}
@@ -19,6 +19,3 @@ spec:
     image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
     ports:
     - containerPort: 5050
-    volumeMounts:
-      - mountPath: "/app/logs"
-        name: log-volume
