@@ -8,4 +8,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data/hello-app-logs
+    path: "/mnt/data/hello-app-logs"
