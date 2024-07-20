@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hello-app-pvc
+  name: hello-app-pvclaim
   namespace: k8cluster
 spec:
   accessModes:
