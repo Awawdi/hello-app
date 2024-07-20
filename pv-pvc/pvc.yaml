@@ -10,3 +10,4 @@ spec:
     requests:
       storage: 512Mi
   storageClassName: standard
+  volumeName: hello-app-pv
