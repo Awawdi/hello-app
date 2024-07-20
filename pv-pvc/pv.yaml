@@ -7,5 +7,6 @@ spec:
     storage: 512Mi
   accessModes:
     - ReadWriteOnce
+  storageClassName: standard
   hostPath:
     path: "/mnt/data/hello-app-logs"

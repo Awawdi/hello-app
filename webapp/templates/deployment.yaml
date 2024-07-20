@@ -14,10 +14,6 @@ spec:
     metadata:
       labels:
         app: {{ .Values.appName }}
-  volumes:
-    - name: log-volume
-      persistentVolumeClaim:
-        claimName: hello-app-pvc
   containers:
   - name: {{ .Values.appName }}
     image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
@@ -26,3 +22,7 @@ spec:
     volumeMounts:
       - mountPath: "/app/logs"
         name: log-volume
+  volumes:
+    - name: log-volume
+      persistentVolumeClaim:
+        claimName: hello-app-pvc
